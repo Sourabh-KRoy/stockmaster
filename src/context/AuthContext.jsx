@@ -14,11 +14,13 @@ const AuthProvider = ({ children }) => {
     const checkSession = async () => {
       try {
         const data = await sessionUser();
-        setUser(data.admin);
-        if (location.pathname === "/" || location.pathname === "/login") {
-          if (data.admin.role === "super-admin") navigate("/super-admin");
-          else if (data.admin.role === "admin") navigate("/admin");
-          else if (data.admin.role === "operator") navigate("/operator");
+        if (data) {
+          setUser(data.admin);
+          if (location.pathname === "/" || location.pathname === "/login") {
+            if (data.admin.role === "super-admin") navigate("/super-admin");
+            else if (data.admin.role === "admin") navigate("/admin");
+            else if (data.admin.role === "operator") navigate("/operator");
+          }
         }
       } catch (err) {
         setUser(null);
