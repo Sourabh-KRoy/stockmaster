@@ -9,11 +9,12 @@ import FeaturesPage from "./pages/FeaturesPage";
 import DashboardLayout from "./components/DashboardLayout";
 import MessagePage from "./pages/Message";
 import Login from "./pages/Login";
+import Loader from "./components/Loader";
 
 function App() {
   const { user, loading } = useAuth();
 
-  if (loading) return <div className="p-8 text-center">Loading...</div>;
+  if (loading) return <Loader />;
 
   if (!user) {
     return (
