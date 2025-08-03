@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-import Login from "./pages/login";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import OperatorDashboard from "./pages/OperatorDashboard";
@@ -9,6 +8,7 @@ import InventoryPage from "./pages/InventoryPage";
 import FeaturesPage from "./pages/FeaturesPage";
 import DashboardLayout from "./components/DashboardLayout";
 import MessagePage from "./pages/Message";
+import Login from "./pages/Login";
 
 function App() {
   const { user, loading } = useAuth();
