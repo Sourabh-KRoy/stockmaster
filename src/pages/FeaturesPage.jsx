@@ -119,7 +119,7 @@ export default function FeaturesMatrix() {
                   <td key={role} className="p-4 text-center">
                     <input
                       type="checkbox"
-                      className="w-4 h-4 text-blue-600 accent-blue-600 focus:ring-blue-500"
+                      className="w-4 h-4 text-blue-600 accent-blue-600 focus:ring-blue-500 cursor-pointer"
                       checked={feature.enabledByRole[role] || false}
                       onChange={() => toggleCheckbox(feature.id, role)}
                     />
