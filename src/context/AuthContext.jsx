@@ -14,47 +14,62 @@ const AuthProvider = ({ children }) => {
     const checkSession = async () => {
       try {
         const data = await sessionUser();
-        if (data) {
+        if (data?.admin) {
           setUser(data.admin);
-          if (location.pathname === "/" || location.pathname === "/login") {
-            if (data.admin.role === "super-admin") navigate("/super-admin");
-            else if (data.admin.role === "admin") navigate("/admin");
-            else if (data.admin.role === "operator") navigate("/operator");
+
+          const isAuthPage =
+            location.pathname === "/" || location.pathname === "/login";
+          if (isAuthPage) {
+            // Redirect based on role
+            navigate(`/${data.admin.role}`, { replace: true });
           }
+        } else {
+          setUser(null);
+          if (location.pathname !== "/login")
+            navigate("/login", { replace: true });
         }
       } catch (err) {
         setUser(null);
-        if (location.pathname !== "/login") navigate("/login");
+        if (location.pathname !== "/login")
+          navigate("/login", { replace: true });
       } finally {
         setLoading(false);
       }
     };
 
     checkSession();
-  }, [location.pathname]);
+    // Only on initial load or pathname change
+  }, [location.pathname, navigate]);
 
   const login = async (formData) => {
-    const res = await loginUser(formData);
-    if (res) {
-      const data = await sessionUser();
-      if (data) {
-        setUser(data.admin);
-        if (data.admin.role === "super-admin") navigate("/super-admin");
-        else if (data.admin.role === "admin") navigate("/admin");
-        else if (data.admin.role === "operator") navigate("/operator");
+    try {
+      const res = await loginUser(formData);
+      if (res) {
+        const data = await sessionUser();
+        if (data?.admin) {
+          setUser(data.admin);
+          navigate(`/${data.admin.role}`, { replace: true });
+        } else {
+          throw new Error("Failed to fetch user session");
+        }
       } else {
-        throw new Error("Failed to fetch user session");
+        throw new Error("Login failed");
       }
-    } else {
-      throw new Error("Login failed");
+    } catch (err) {
+      setUser(null);
+      throw err;
     }
   };
 
   const logout = async () => {
-    const res = await userLogout();
-    if (res) {
-      setUser(null);
-      navigate("/login");
+    try {
+      const res = await userLogout();
+      if (res) {
+        setUser(null);
+        navigate("/login", { replace: true });
+      }
+    } catch (err) {
+      console.error("Logout failed", err);
     }
   };
 
