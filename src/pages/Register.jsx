@@ -41,7 +41,13 @@ export default function Register() {
       setLoading(true);
       await register(form);
     } catch (err) {
-      alert("Registration failed: " + err.message);
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: "Registration failed: " + err.message,
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } finally {
       setLoading(false);
     }

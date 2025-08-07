@@ -4,6 +4,7 @@ import heroImage from "../assets/images/image.png";
 import feature1 from "../assets/images/feature1.png";
 import feature2 from "../assets/images/feature2.png";
 import feature3 from "../assets/images/feature3.png";
+import Swal from "sweetalert2";
 
 const LandingPage = () => {
   return (

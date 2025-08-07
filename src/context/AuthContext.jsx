@@ -6,6 +6,7 @@ import {
   sessionUser,
   userLogout,
 } from "../service/authService";
+import Swal from "sweetalert2";
 
 const AuthContext = createContext();
 
@@ -57,29 +58,57 @@ export const AuthProvider = ({ children }) => {
     if (res) {
       const data = await sessionUser();
       if (data?.admin) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Login successful!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         setUser(data.admin);
         navigate(`/${data.admin.role}`, { replace: true });
       } else {
         throw new Error("Failed to fetch user session");
       }
     } else {
-      throw new Error("Login failed");
+      throw new Error("Login failed", res.message);
     }
   };
 
   /** REGISTER **/
   const register = async (formData) => {
-    const res = await registerUser(formData);
-    if (res) {
-      const data = await sessionUser();
-      if (data) {
+    try {
+      const res = await registerUser(formData);
+
+      // Assuming a successful response does not include an error message
+      if (res && !res.message) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Registration successful!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
         navigate(`/login`, { replace: true });
-        alert("Registration successful! Please log in.");
       } else {
-        throw new Error("Failed to fetch user session");
+        // Handle known error from backend
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: res.message || "Registration failed",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
-    } else {
-      throw new Error("Registration failed");
+    } catch (error) {
+      // Handle unexpected errors
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: error.message || "Something went wrong",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     }
   };
 
